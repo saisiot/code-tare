@@ -192,14 +192,22 @@ export function assignRandomColor() {
  * 구분 태그 추가
  */
 export function addCategoryTag(tag) {
+  // 디버그 로그 파일에 기록
+  fs.appendFileSync('/tmp/tag-debug.log', `\n[${new Date().toISOString()}] addCategoryTag 호출: ${tag}\n`);
+
   const definitions = loadTagDefinitions();
+  fs.appendFileSync('/tmp/tag-debug.log', `definitions: ${JSON.stringify(definitions.categories)}\n`);
 
   if (definitions.categories.includes(tag)) {
+    fs.appendFileSync('/tmp/tag-debug.log', '이미 존재하는 태그\n');
     return { success: false, message: 'Tag already exists' };
   }
 
   definitions.categories.push(tag);
-  saveTagDefinitions(definitions);
+  fs.appendFileSync('/tmp/tag-debug.log', `태그 추가 후: ${JSON.stringify(definitions.categories)}\n`);
+
+  const saveResult = saveTagDefinitions(definitions);
+  fs.appendFileSync('/tmp/tag-debug.log', `저장 결과: ${saveResult}\n`);
 
   // 새 태그에 색상 할당
   const colors = loadTagColors();
@@ -208,7 +216,10 @@ export function addCategoryTag(tag) {
     saveTagColors(colors);
   }
 
-  return { success: true, definitions, colors };
+  const result = { success: true, definitions, colors };
+  fs.appendFileSync('/tmp/tag-debug.log', `반환값: ${JSON.stringify(result).substring(0, 200)}\n`);
+
+  return result;
 }
 
 /**

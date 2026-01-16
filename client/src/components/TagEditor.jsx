@@ -44,9 +44,9 @@ export default function TagEditor({
 
       const data = await res.json();
       if (data.success) {
-        setNewCategoryTag('');
-        onRefreshDefinitions();
         alert('새 구분 태그가 추가되었습니다!');
+        // 페이지 새로고침하여 최신 태그 목록 반영
+        window.location.reload();
       } else {
         alert(data.message || '태그 추가 실패');
       }
@@ -254,8 +254,9 @@ function TagManagementModal({ tagDefinitions, tagColors, onClose, onRefresh }) {
 
       const data = await res.json();
       if (data.success) {
-        onRefresh();
         alert('태그가 삭제되었습니다.');
+        // 페이지 새로고침하여 최신 태그 목록 반영
+        window.location.reload();
       } else {
         if (data.projectsUsingTag) {
           alert(`이 태그를 사용 중인 프로젝트가 있습니다:\n${data.projectsUsingTag.join(', ')}`);

@@ -248,6 +248,7 @@ app.post('/api/tags/:projectName', (req, res) => {
 app.post('/api/tags/manage', (req, res) => {
   try {
     const { action, tag } = req.body;
+    fs.appendFileSync('/tmp/api-debug.log', `\n[${new Date().toISOString()}] API 호출: action=${action}, tag=${tag}\n`);
 
     if (!action || !tag) {
       return res.status(400).json({
@@ -259,7 +260,9 @@ app.post('/api/tags/manage', (req, res) => {
     let result;
 
     if (action === 'add') {
+      fs.appendFileSync('/tmp/api-debug.log', 'addCategoryTag 호출 전\n');
       result = addCategoryTag(tag);
+      fs.appendFileSync('/tmp/api-debug.log', `addCategoryTag 반환: ${JSON.stringify(result).substring(0, 100)}\n`);
     } else if (action === 'delete') {
       result = deleteCategoryTag(tag);
     } else {
@@ -269,9 +272,10 @@ app.post('/api/tags/manage', (req, res) => {
       });
     }
 
+    fs.appendFileSync('/tmp/api-debug.log', `최종 응답 전송: ${JSON.stringify(result).substring(0, 100)}\n`);
     res.json(result);
   } catch (error) {
-    console.error('Error managing tags:', error);
+    fs.appendFileSync('/tmp/api-debug.log', `에러 발생: ${error.message}\n`);
     res.status(500).json({ success: false, error: error.message });
   }
 });
