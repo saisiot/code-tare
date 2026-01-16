@@ -1,4 +1,46 @@
+import { useState } from 'react';
+
 export default function ProjectCard({ project, tagColors, onOpenTagEditor }) {
+  const [showProgressMenu, setShowProgressMenu] = useState(false);
+  const [isUpdatingProgress, setIsUpdatingProgress] = useState(false);
+
+  const PROGRESS_OPTIONS = ['진행중', '중지', '완료', '계획중', 'deprecated'];
+
+  async function handleProgressChange(newProgress) {
+    if (newProgress === project.tags?.progress) {
+      setShowProgressMenu(false);
+      return;
+    }
+
+    setIsUpdatingProgress(true);
+    try {
+      const updatedTags = {
+        ...project.tags,
+        progress: newProgress
+      };
+
+      const res = await fetch(`/api/tags/${project.name}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTags)
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        // 성공 시 페이지 새로고침하거나 부모 컴포넌트에 알림
+        window.location.reload();
+      } else {
+        alert('진행 상태 변경 실패');
+      }
+    } catch (error) {
+      console.error('Error updating progress:', error);
+      alert('진행 상태 변경 중 오류가 발생했습니다.');
+    } finally {
+      setIsUpdatingProgress(false);
+      setShowProgressMenu(false);
+    }
+  }
+
   async function openProject(app) {
     try {
       const body = {
@@ -66,11 +108,46 @@ export default function ProjectCard({ project, tagColors, onOpenTagEditor }) {
 
       {/* 태그 */}
       <div className="flex gap-1 flex-wrap mb-3 min-h-[28px]">
-        {/* 진행 관련 태그 */}
+        {/* 진행 관련 태그 (클릭 가능) */}
         {tags?.progress && (
-          <span className={`text-xs px-2 py-1 rounded font-semibold border-2 ${getTagColor(tags.progress, 'progress')}`}>
-            {tags.progress}
-          </span>
+          <div className="relative">
+            <button
+              onClick={() => setShowProgressMenu(!showProgressMenu)}
+              disabled={isUpdatingProgress}
+              className={`text-xs px-2 py-1 rounded font-semibold border-2 cursor-pointer hover:opacity-80 transition-opacity ${getTagColor(tags.progress, 'progress')} ${isUpdatingProgress ? 'opacity-50' : ''}`}
+              title="클릭하여 진행 상태 변경"
+            >
+              {isUpdatingProgress ? '변경 중...' : tags.progress}
+            </button>
+
+            {/* 드롭다운 메뉴 */}
+            {showProgressMenu && !isUpdatingProgress && (
+              <>
+                {/* 배경 클릭 시 닫기 */}
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowProgressMenu(false)}
+                />
+
+                {/* 메뉴 */}
+                <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[120px]">
+                  {PROGRESS_OPTIONS.map(option => (
+                    <button
+                      key={option}
+                      onClick={() => handleProgressChange(option)}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                        option === tags.progress ? 'font-semibold bg-gray-50' : ''
+                      }`}
+                    >
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs ${getTagColor(option, 'progress')}`}>
+                        {option}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         )}
 
         {/* 구분 태그 */}
