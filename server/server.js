@@ -225,6 +225,48 @@ app.get('/api/tags/:projectName', (req, res) => {
 });
 
 /**
+ * POST /api/tags/manage
+ * 전역 태그 추가/삭제
+ * 주의: 반드시 /api/tags/:projectName 보다 먼저 선언되어야 함
+ */
+app.post('/api/tags/manage', (req, res) => {
+  try {
+    const { action, tag } = req.body;
+    console.log('[/api/tags/manage] 요청 받음:', { action, tag });
+
+    if (!action || !tag) {
+      return res.status(400).json({
+        success: false,
+        error: 'Action and tag are required'
+      });
+    }
+
+    let result;
+
+    if (action === 'add') {
+      console.log('[/api/tags/manage] addCategoryTag 호출');
+      result = addCategoryTag(tag);
+      console.log('[/api/tags/manage] addCategoryTag 결과:', JSON.stringify(result).substring(0, 200));
+    } else if (action === 'delete') {
+      console.log('[/api/tags/manage] deleteCategoryTag 호출');
+      result = deleteCategoryTag(tag);
+      console.log('[/api/tags/manage] deleteCategoryTag 결과:', JSON.stringify(result).substring(0, 200));
+    } else {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid action'
+      });
+    }
+
+    console.log('[/api/tags/manage] 최종 응답 전송:', JSON.stringify(result).substring(0, 200));
+    res.json(result);
+  } catch (error) {
+    console.error('[/api/tags/manage] 에러 발생:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * POST /api/tags/:projectName
  * 특정 프로젝트의 태그 저장
  */
@@ -237,45 +279,6 @@ app.post('/api/tags/:projectName', (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error saving project tags:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * POST /api/tags/manage
- * 전역 태그 추가/삭제
- */
-app.post('/api/tags/manage', (req, res) => {
-  try {
-    const { action, tag } = req.body;
-    fs.appendFileSync('/tmp/api-debug.log', `\n[${new Date().toISOString()}] API 호출: action=${action}, tag=${tag}\n`);
-
-    if (!action || !tag) {
-      return res.status(400).json({
-        success: false,
-        error: 'Action and tag are required'
-      });
-    }
-
-    let result;
-
-    if (action === 'add') {
-      fs.appendFileSync('/tmp/api-debug.log', 'addCategoryTag 호출 전\n');
-      result = addCategoryTag(tag);
-      fs.appendFileSync('/tmp/api-debug.log', `addCategoryTag 반환: ${JSON.stringify(result).substring(0, 100)}\n`);
-    } else if (action === 'delete') {
-      result = deleteCategoryTag(tag);
-    } else {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid action'
-      });
-    }
-
-    fs.appendFileSync('/tmp/api-debug.log', `최종 응답 전송: ${JSON.stringify(result).substring(0, 100)}\n`);
-    res.json(result);
-  } catch (error) {
-    fs.appendFileSync('/tmp/api-debug.log', `에러 발생: ${error.message}\n`);
     res.status(500).json({ success: false, error: error.message });
   }
 });
