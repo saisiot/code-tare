@@ -1,9 +1,17 @@
-# 📦 Code-tare
+<h1 align="center">Code-tare</h1>
 
-> 로컬 프로젝트를 한눈에 관리하는 웹 대시보드
+<p align="center">
+  <img src="http://localhost:3001/docs/images/logo.png" alt="Code-tare Logo" width="400"/>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/tare/code-tare)
+<p align="center">
+  <strong>로컬 프로젝트를 한눈에 관리하는 웹 대시보드</strong>
+</p>
+
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"/></a>
+  <a href="https://github.com/tare/code-tare"><img src="https://img.shields.io/badge/version-1.1.0-blue.svg" alt="Version"/></a>
+</p>
 
 ## 🚀 빠른 시작
 

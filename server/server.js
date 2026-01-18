@@ -26,6 +26,9 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// 정적 파일 제공 (docs/images 폴더)
+app.use('/docs/images', express.static(path.join(__dirname, '../docs/images')));
+
 // 캐시된 프로젝트 데이터
 let cachedProjects = null;
 

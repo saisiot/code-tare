@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 export default function ReadmePage() {
   const [content, setContent] = useState('');
@@ -47,28 +48,30 @@ export default function ReadmePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <article className="prose prose-slate max-w-none
-            prose-headings:text-gray-900
-            prose-h1:text-3xl prose-h1:font-bold prose-h1:border-b prose-h1:pb-2
-            prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8
-            prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6
-            prose-p:text-gray-700 prose-p:leading-7
-            prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-gray-900 prose-strong:font-semibold
-            prose-code:text-pink-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
-            prose-pre:bg-gray-900 prose-pre:text-gray-100
-            prose-ul:list-disc prose-ul:ml-6
-            prose-ol:list-decimal prose-ol:ml-6
-            prose-li:text-gray-700
-            prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic
-            prose-img:rounded-lg prose-img:shadow-md
-            prose-table:border-collapse
-            prose-th:bg-gray-100 prose-th:px-4 prose-th:py-2 prose-th:border
-            prose-td:px-4 prose-td:py-2 prose-td:border
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
+          <article className="prose prose-lg prose-slate max-w-none
+            prose-headings:font-bold
+            prose-h1:text-4xl prose-h1:mb-4 prose-h1:text-blue-600
+            prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:pb-2
+            prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
+            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+            prose-a:text-blue-600 prose-a:font-medium hover:prose-a:underline
+            prose-strong:text-gray-900 prose-strong:font-bold
+            prose-ul:my-4 prose-ul:list-none prose-ul:pl-0
+            prose-li:text-gray-700 prose-li:mb-2 prose-li:pl-6 prose-li:relative
+            prose-li:before:content-['▸'] prose-li:before:absolute prose-li:before:left-0 prose-li:before:text-blue-500 prose-li:before:font-bold
+            prose-code:text-pink-600 prose-code:bg-pink-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
+            prose-code:before:content-none prose-code:after:content-none
+            prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+            prose-pre:shadow-inner
+            prose-blockquote:border-l-4 prose-blockquote:border-blue-400 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
+            prose-img:rounded-lg prose-img:shadow-lg prose-img:my-6
           ">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
               {content}
             </ReactMarkdown>
           </article>
