@@ -13,9 +13,47 @@
   <a href="https://github.com/tare/code-tare"><img src="https://img.shields.io/badge/version-1.1.0-blue.svg" alt="Version"/></a>
 </p>
 
+## 💡 만들게 된 계기
+
+여러 가지 토이 프로젝트들을 하다 보니 관리가 너무 복잡해졌어요. 어떤 프로젝트가 어디에 있는지, 무슨 기술 스택을 썼는지, 언제 마지막으로 작업했는지 기억하기 어려웠죠.
+
+"이 프로젝트들을 한눈에 보고 빠르게 접근할 수 있으면 좋겠다냥!" 🐱
+
+그래서 만든 것이 Code-tare입니다. 실뭉치처럼 엉킨 프로젝트들을 깔끔하게 정리해주는 대시보드예요.
+
+## ⚙️ 작동 원리
+
+Code-tare는 **LLM이나 복잡한 분석 없이**, 순수하게 파일 시스템을 스캔하여 정보를 수집합니다:
+
+**🔍 자동 감지 방식:**
+- `package.json` → Node.js 프로젝트
+- `pyproject.toml` → Python Poetry 프로젝트
+- `requirements.txt` → Python pip 프로젝트
+
+**📊 정보 추출:**
+- **설명**: package.json의 description 또는 README.md의 첫 문장
+- **기술 스택**: dependencies 목록 자동 파싱
+- **Git 정보**: .git/config에서 remote URL 추출
+- **마지막 수정일**: .git/logs/HEAD의 최근 커밋 타임스탬프
+
+**✨ 특징:**
+- 완전히 로컬에서 실행 (외부 API 호출 없음)
+- 빠른 스캔 속도 (정적 파일 분석)
+- 비용 없음 (LLM 불필요)
+
+## ⚠️ 시스템 요구사항
+
+- **운영체제**: macOS (현재 macOS 전용)
+- **Node.js**: v16 이상
+- **npm**: v8 이상
+
+**📝 참고:**
+- Windows/Linux 지원은 현재 제공되지 않습니다
+- Finder 열기, Terminal 열기 등의 기능은 macOS의 `open` 명령어를 사용합니다
+
 ## 🚀 빠른 시작
 
-### 설치
+### 방법 1: 수동 설치
 
 ```bash
 # 저장소 클론
@@ -33,6 +71,34 @@ npm run dev
 ```
 
 브라우저에서 http://localhost:5173 접속
+
+### 방법 2: 🤖 Claude Code / Codex 사용자
+
+Claude Code CLI나 Codex를 사용한다면 더 간단합니다:
+
+```bash
+# 1. 저장소 클론
+git clone https://github.com/tare/code-tare.git
+cd code-tare
+
+# 2. Claude Code 실행 후 다음 프롬프트 입력:
+```
+
+**프롬프트:**
+```
+이 프로젝트를 실행할 수 있게 환경 설정하고 서버 시작해줘.
+SCAN_PATH는 /Users/내사용자명/프로젝트폴더 경로로 설정해줘.
+```
+
+**또는 더 구체적으로:**
+```
+.env.example을 .env로 복사하고, SCAN_PATH를 /Users/내사용자명/프로젝트폴더로 설정해줘.
+그 다음 npm install, npm run install-all, npm run dev를 실행해서 서버를 시작해줘.
+```
+
+**💡 팁:**
+- 프로젝트 폴더 경로는 본인의 실제 경로로 변경하세요
+- 예: `/Users/tare/code_workshop`, `/Users/tare/projects` 등
 
 ## ✨ 주요 기능
 
