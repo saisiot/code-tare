@@ -18,7 +18,12 @@ export default function ReadmePage() {
       const data = await res.json();
 
       if (data.success) {
-        setContent(data.content);
+        // 이미지 경로를 서버 경로로 변환
+        const contentWithFixedImages = data.content.replace(
+          /src="docs\/images\//g,
+          'src="http://localhost:3001/docs/images/'
+        );
+        setContent(contentWithFixedImages);
       } else {
         setError('README를 불러올 수 없습니다.');
       }
