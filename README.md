@@ -1,6 +1,11 @@
-# 📦 프로젝트 관리 대시보드
+# 📦 Code-tare
 
-53개 이상의 프로젝트를 한눈에 관리할 수 있는 웹 기반 대시보드입니다.
+> **로컬 프로젝트 관리 대시보드**
+> 53개 이상의 프로젝트를 한눈에 관리할 수 있는 웹 기반 대시보드
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/tare/code-tare)
+[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
 ## ✨ 주요 기능
 
@@ -68,8 +73,8 @@
 
 ```bash
 # 1. 저장소 클론
-git clone <repository-url>
-cd _project-dashboard
+git clone https://github.com/tare/code-tare.git
+cd code-tare
 
 # 2. 환경 설정
 cp .env.example .env
@@ -205,10 +210,21 @@ _project-dashboard/
 - [ ] 다크 모드 지원
 - [ ] Fullscreen TagManagement 모달 (모달 스택 방식)
 
+## 👤 제작자
+
+**tare from the better**
+- GitHub: [@tare](https://github.com/tare)
+
 ## 📝 라이선스
 
-MIT
+MIT License - 자유롭게 사용, 수정, 배포 가능합니다.
+
+자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 ---
 
-Made with ❤️ using Claude Code
+## 🙏 Credits
+
+Made with ❤️ by tare from the better using Claude Code
+
+**Code-tare** v1.1.0
