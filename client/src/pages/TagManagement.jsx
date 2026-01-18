@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function TagManagement() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const returnToProject = location.state?.returnToProject;
+
   const [tags, setTags] = useState([]);
   const [tagColors, setTagColors] = useState({});
   const [newTagName, setNewTagName] = useState('');
@@ -40,8 +45,20 @@ export default function TagManagement() {
       const data = await res.json();
       if (data.success) {
         setNewTagName('');
-        await fetchTags(); // 목록 새로고침
-        alert('✅ 태그가 추가되었습니다!');
+
+        // Dashboard로 복귀하며 프로젝트 정보 전달
+        if (returnToProject) {
+          navigate('/', {
+            state: {
+              reopenProject: returnToProject,
+              newTagAdded: true
+            }
+          });
+        } else {
+          // 프로젝트 정보가 없으면 태그 목록만 새로고침
+          await fetchTags();
+          alert('✅ 태그가 추가되었습니다!');
+        }
       } else {
         alert('❌ 태그 추가 실패: ' + (data.message || '알 수 없는 오류'));
       }
@@ -86,7 +103,17 @@ export default function TagManagement() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold mb-6">🏷️ 구분 태그 관리</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold">🏷️ 구분 태그 관리</h2>
+          {returnToProject && (
+            <button
+              onClick={() => navigate('/', { state: { reopenProject: returnToProject } })}
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            >
+              ← 돌아가기
+            </button>
+          )}
+        </div>
 
         {/* 태그 추가 섹션 */}
         <div className="mb-8 p-4 bg-blue-50 rounded-lg">

@@ -279,6 +279,7 @@ export function updateTagColor(tag, color) {
 export function getProjectTags(projectName) {
   const allTags = loadProjectTags();
   return allTags[projectName] || {
+    customTitle: null,
     progress: '계획중',
     categories: [],
     favorite: false,
@@ -292,6 +293,13 @@ export function getProjectTags(projectName) {
  */
 export function setProjectTags(projectName, tags) {
   const allTags = loadProjectTags();
+
+  // customTitle 유효성 검사
+  if (tags.customTitle !== undefined) {
+    const trimmed = tags.customTitle?.trim();
+    tags.customTitle = trimmed && trimmed.length <= 50 ? trimmed : null;
+  }
+
   allTags[projectName] = tags;
   saveProjectTags(allTags);
 

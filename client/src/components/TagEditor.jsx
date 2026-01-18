@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function TagEditor({
   project,
@@ -8,6 +9,7 @@ export default function TagEditor({
   onSave,
   onRefreshDefinitions
 }) {
+  const [customTitle, setCustomTitle] = useState(project.tags?.customTitle || '');
   const [progress, setProgress] = useState(project.tags?.progress || '계획중');
   const [categories, setCategories] = useState(project.tags?.categories || []);
   const [favorite, setFavorite] = useState(project.tags?.favorite || false);
@@ -45,8 +47,15 @@ export default function TagEditor({
       const data = await res.json();
       if (data.success) {
         alert('새 구분 태그가 추가되었습니다!');
-        // 페이지 새로고침하여 최신 태그 목록 반영
-        window.location.reload();
+        setNewCategoryTag('');
+
+        // 페이지 새로고침 대신 콜백 호출
+        if (onRefreshDefinitions) {
+          await onRefreshDefinitions();
+        }
+
+        // 새로 추가된 태그를 자동으로 선택
+        setCategories([...categories, newCategoryTag.trim()]);
       } else {
         alert(data.message || '태그 추가 실패');
       }
@@ -58,6 +67,7 @@ export default function TagEditor({
 
   function handleSave() {
     const tags = {
+      customTitle: customTitle.trim() || null,
       progress,
       categories,
       favorite,
@@ -91,6 +101,37 @@ export default function TagEditor({
             </button>
           </div>
           <p className="text-sm text-gray-600 mt-1">{project.name}</p>
+        </div>
+
+        {/* 프로젝트 정보 */}
+        <div className="px-6 py-4 border-b bg-gray-50">
+          <h3 className="font-semibold text-gray-900 mb-3">프로젝트 정보</h3>
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                제목
+              </label>
+              <input
+                type="text"
+                value={customTitle}
+                onChange={(e) => setCustomTitle(e.target.value)}
+                placeholder={project.name}
+                maxLength={50}
+                className="w-full px-3 py-2 border border-gray-300 rounded
+                           focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                비워두면 폴더명이 표시됩니다
+              </p>
+            </div>
+
+            <div className="bg-white px-3 py-2 rounded border border-gray-200">
+              <p className="text-xs text-gray-600">
+                📁 폴더명: <span className="font-mono">{project.name}</span>
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* 내용 */}
@@ -202,12 +243,13 @@ export default function TagEditor({
 
         {/* 푸터 */}
         <div className="sticky bottom-0 bg-gray-50 border-t px-6 py-4 flex justify-between">
-          <button
-            onClick={() => setShowManageModal(true)}
+          <Link
+            to="/tags"
+            state={{ returnToProject: project.name }}
             className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded transition-colors"
           >
             ⚙️ 구분 태그 전체 관리
-          </button>
+          </Link>
           <div className="flex gap-2">
             <button
               onClick={onClose}
@@ -255,8 +297,14 @@ function TagManagementModal({ tagDefinitions, tagColors, onClose, onRefresh }) {
       const data = await res.json();
       if (data.success) {
         alert('태그가 삭제되었습니다.');
-        // 페이지 새로고침하여 최신 태그 목록 반영
-        window.location.reload();
+
+        // 페이지 새로고침 대신 콜백 호출
+        if (onRefresh) {
+          await onRefresh();
+        }
+
+        // 모달 닫기
+        onClose();
       } else {
         if (data.projectsUsingTag) {
           alert(`이 태그를 사용 중인 프로젝트가 있습니다:\n${data.projectsUsingTag.join(', ')}`);

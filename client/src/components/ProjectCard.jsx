@@ -93,17 +93,28 @@ export default function ProjectCard({ project, tagColors, onOpenTagEditor }) {
   }
 
   const { tags } = project;
+  const displayTitle = tags?.customTitle || project.name;
+  const showFolderName = tags?.customTitle && tags.customTitle !== project.name;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow">
       {/* 헤더 */}
       <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg font-bold text-gray-900 truncate flex-1" title={project.name}>
-          {project.name}
-        </h3>
-        {tags?.favorite && (
-          <span className="text-yellow-400 ml-2">⭐</span>
-        )}
+        <div className="flex flex-col flex-1 min-w-0">
+          <div className="flex items-center">
+            <h3 className="text-lg font-bold text-gray-900 truncate flex-1" title={displayTitle}>
+              {displayTitle}
+            </h3>
+            {tags?.favorite && (
+              <span className="text-yellow-400 ml-2">⭐</span>
+            )}
+          </div>
+          {showFolderName && (
+            <p className="text-xs text-gray-500 mt-1">
+              📁 {project.name}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* 태그 */}

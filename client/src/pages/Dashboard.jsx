@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import ProjectCard from '../components/ProjectCard';
 import SearchBar from '../components/SearchBar';
 import FilterPanel from '../components/FilterPanel';
 import TagEditor from '../components/TagEditor';
 
 export default function Dashboard() {
+  const location = useLocation();
+
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +28,31 @@ export default function Dashboard() {
     fetchTagDefinitions();
   }, []);
 
+  // location.state 감지 및 모달 자동 재개방
+  useEffect(() => {
+    const reopenProjectName = location.state?.reopenProject;
+    const newTagAdded = location.state?.newTagAdded;
+
+    if (reopenProjectName && projects.length > 0) {
+      // 해당 프로젝트 찾기
+      const projectToReopen = projects.find(p => p.name === reopenProjectName);
+
+      if (projectToReopen) {
+        // 태그 목록 새로고침
+        if (newTagAdded) {
+          fetchTagDefinitions();
+        }
+
+        // 모달 자동 재개방
+        setSelectedProject(projectToReopen);
+        setTagEditorOpen(true);
+      }
+
+      // location.state 정리 (브라우저 뒤로가기 시 재실행 방지)
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, projects]);
+
   // 검색 및 필터링 적용
   useEffect(() => {
     let result = [...projects];
@@ -32,10 +60,14 @@ export default function Dashboard() {
     // 검색어 필터링
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
-      );
+      result = result.filter(p => {
+        const title = p.tags?.customTitle || p.name;
+        return (
+          title.toLowerCase().includes(query) ||
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+        );
+      });
     }
 
     // 진행 상태 필터링
