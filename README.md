@@ -1,7 +1,7 @@
 <h1 align="center">Code-tare</h1>
 
 <p align="center">
-  <img src="http://localhost:3001/docs/images/logo.png" alt="Code-tare Logo" width="400"/>
+  <img src="docs/images/logo.png" alt="Code-tare Logo" width="400"/>
 </p>
 
 <p align="center">
