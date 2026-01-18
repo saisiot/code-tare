@@ -306,6 +306,32 @@ app.post('/api/tags/colors', (req, res) => {
   }
 });
 
+/**
+ * GET /api/readme
+ * README.md 파일 내용 반환
+ */
+app.get('/api/readme', (req, res) => {
+  try {
+    const readmePath = path.join(__dirname, '../README.md');
+
+    if (!fs.existsSync(readmePath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'README.md not found'
+      });
+    }
+
+    const content = fs.readFileSync(readmePath, 'utf-8');
+    res.json({
+      success: true,
+      content
+    });
+  } catch (error) {
+    console.error('Error reading README:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // 서버 시작
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
