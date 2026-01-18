@@ -21,6 +21,18 @@
 
 그래서 만든 것이 Code-tare입니다. 실뭉치처럼 엉킨 프로젝트들을 깔끔하게 정리해주는 대시보드예요.
 
+## 📸 대시보드 미리보기
+
+<p align="center">
+  <img src="docs/images/dashboard-screenshot.png" alt="Code-tare Dashboard" width="100%"/>
+</p>
+
+**주요 화면 구성:**
+- 🔍 **검색 바**: 프로젝트 이름, 설명으로 빠른 검색
+- 📊 **필터 패널**: 진행 상태, 구분 태그로 필터링
+- 📦 **프로젝트 카드**: 제목, 진행 상태, 태그, 기술 스택 한눈에 확인
+- ⚡ **빠른 실행 버튼**: Claude Code, VSCode, Finder, GitHub 원클릭 열기
+
 ## ⚙️ 작동 원리
 
 Code-tare는 **LLM이나 복잡한 분석 없이**, 순수하게 파일 시스템을 스캔하여 정보를 수집합니다:
