@@ -4,11 +4,12 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 /**
- * 프로젝트를 Claude Code로 열기
+ * 프로젝트를 Claude Code로 열기 (Warp 터미널 사용)
  */
 export async function openWithClaudeCode(projectPath) {
   try {
-    await execAsync(`claude-code "${projectPath}"`);
+    // Warp 터미널로 폴더를 열고 claude 명령어 입력
+    await execAsync(`open -a Warp "${projectPath}"`);
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
